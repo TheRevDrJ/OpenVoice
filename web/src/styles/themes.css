@@ -1,0 +1,277 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Theme engine. A theme is a class on the root .ov-shell element:
+   .theme-openvoice (default, clean teal) / .theme-honededge (warm olive+gold,
+   HonedEdge house style) / .theme-base (the legacy base skin).
+
+   The base shell styling (ov.css + app.css) needs no overrides for .theme-base.
+   Every other theme gets the shared CLEAN CHROME below (no elbows/rail; clean header,
+   tabs, panel) via :not(.theme-base), and supplies its own palette + chrome tokens.
+
+   Component accents that hardcode the base orange rgba() are retinted with color-mix()
+   off var(--ov-orange), so they follow whatever the active theme's accent is.
+
+   Add a theme later = a {id,label} in THEMES (App.tsx) + a .theme-<id> block setting
+   the --ov-* palette + the --ov-* chrome tokens. That's it.
+   ───────────────────────────────────────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap");
+
+/* Theme switcher (header, all themes) */
+.bar-top-right {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 16px);
+  min-width: 0;
+}
+.theme-select {
+  font: inherit;
+  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  background: var(--ov-surface, rgba(0, 0, 0, 0.35));
+  color: var(--ov-text, #f0f0f0);
+  border: 1px solid var(--ov-border, rgba(255, 255, 255, 0.3));
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* ===================== Shared clean chrome (all themes) ============ */
+.ov-shell:not(.theme-base) {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 0;
+  padding: 0;
+  background: var(--ov-bg);
+  font-family: var(--ov-font);
+  letter-spacing: normal;
+  --field-bg: rgba(0, 0, 0, 0.3);
+  --row-bg: rgba(0, 0, 0, 0.2);
+  --modal-bg: #0b0e16;
+}
+.ov-shell:not(.theme-base) .elbow-tl,
+.ov-shell:not(.theme-base) .elbow-bl,
+.ov-shell:not(.theme-base) .rail {
+  display: none;
+}
+.ov-shell:not(.theme-base) .bar-top {
+  grid-column: 1;
+  grid-row: 1;
+}
+.ov-shell:not(.theme-base) .content {
+  grid-column: 1;
+  grid-row: 2;
+}
+.ov-shell:not(.theme-base) .bar-bottom {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+/* Header */
+.ov-shell:not(.theme-base) .bar-top {
+  background: var(--ov-surface);
+  color: var(--ov-text);
+  border-bottom: 1px solid var(--ov-border);
+  border-radius: 0;
+  text-transform: none;
+  letter-spacing: normal;
+  padding: 0 clamp(14px, 2.5vw, 28px);
+  min-height: clamp(48px, 8vw, 62px);
+}
+.ov-shell:not(.theme-base) .bar-top .label {
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2.4vw, 1.45rem);
+  color: var(--ov-text);
+  letter-spacing: 0.01em;
+}
+/* The accent dot is replaced by the product logo in clean themes. */
+.ov-shell:not(.theme-base) .bar-top .label::before {
+  display: none;
+}
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 16px);
+  min-width: 0;
+}
+.ov-shell:not(.theme-base) .brand-logo {
+  height: clamp(34px, 6vw, 46px);
+  width: auto;
+  flex-shrink: 0;
+}
+.ov-shell:not(.theme-base) .bar-top .tagline {
+  color: var(--ov-peach);
+  opacity: 0.72;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+/* Footer */
+.ov-shell:not(.theme-base) .bar-bottom {
+  background: var(--ov-surface);
+  color: var(--ov-peach);
+  border-top: 1px solid var(--ov-border);
+  border-radius: 0;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* Content margins (rail is gone) */
+.ov-shell:not(.theme-base) .content.studio {
+  padding: clamp(14px, 2.5vw, 30px);
+}
+
+/* Tabs — clean, not chunky pills */
+.ov-shell:not(.theme-base) .tab-btn {
+  background: transparent;
+  color: var(--ov-peach);
+  border: 1px solid var(--ov-border);
+  border-radius: 8px;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  opacity: 1;
+  padding: clamp(7px, 1.1vw, 10px) clamp(14px, 2.2vw, 22px);
+}
+.ov-shell:not(.theme-base) .tab-btn:hover {
+  background: color-mix(in srgb, var(--ov-text) 8%, transparent);
+  filter: none;
+}
+.ov-shell:not(.theme-base) .tab-btn.active {
+  background: var(--ov-orange);
+  color: var(--ov-on-accent);
+  border-color: var(--ov-orange);
+}
+
+/* Primary action buttons — calmer */
+.ov-shell:not(.theme-base) .answer {
+  text-transform: none;
+  letter-spacing: 0.01em;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.ov-shell:not(.theme-base) .answer.go {
+  color: var(--ov-on-accent);
+}
+
+/* Tame the all-caps + heavy tracking on small labels/chips/segments */
+.ov-shell:not(.theme-base) .meta-label,
+.ov-shell:not(.theme-base) .voice-toggle,
+.ov-shell:not(.theme-base) .lib-filter,
+.ov-shell:not(.theme-base) .mode-btn,
+.ov-shell:not(.theme-base) .mini-btn,
+.ov-shell:not(.theme-base) .gender-tag,
+.ov-shell:not(.theme-base) .prompt-chip,
+.ov-shell:not(.theme-base) .voice-prompt-label,
+.ov-shell:not(.theme-base) .cap-unit,
+.ov-shell:not(.theme-base) .meta-internal,
+.ov-shell:not(.theme-base) .lib-count,
+.ov-shell:not(.theme-base) .mode-btn.active,
+.ov-shell:not(.theme-base) .active-voice {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+/* Accent tints that hardcoded the base orange → follow the theme accent via color-mix */
+.ov-shell:not(.theme-base) .prompt-chip {
+  background: color-mix(in srgb, var(--ov-orange) 14%, transparent);
+  border-color: color-mix(in srgb, var(--ov-orange) 50%, transparent);
+}
+.ov-shell:not(.theme-base) .prompt-chip:hover {
+  background: color-mix(in srgb, var(--ov-orange) 24%, transparent);
+}
+.ov-shell:not(.theme-base) .gender-tag {
+  border-color: color-mix(in srgb, var(--ov-orange) 45%, transparent);
+}
+.ov-shell:not(.theme-base) .lib-filters {
+  border-bottom-color: color-mix(in srgb, var(--ov-orange) 28%, transparent);
+}
+.ov-shell:not(.theme-base) .voice-row.active {
+  background: color-mix(in srgb, var(--ov-orange) 14%, transparent);
+}
+.ov-shell:not(.theme-base) .mode-seg,
+.ov-shell:not(.theme-base) .mini-seg,
+.ov-shell:not(.theme-base) .source-seg {
+  background: color-mix(in srgb, var(--ov-text) 7%, transparent);
+}
+
+/* The native file-picker button defaults to --ov-plum, which in the clean themes
+   is a muted slate that reads as disabled. Use the theme accent, like every other button. */
+.ov-shell:not(.theme-base) .bake-input::file-selector-button {
+  background: var(--ov-orange);
+  color: var(--ov-on-accent);
+}
+.ov-shell:not(.theme-base) .bake-input::file-selector-button:hover {
+  filter: brightness(1.08);
+}
+
+/* ===================== OpenVoice theme (default) — dark slate + teal ========= */
+.theme-openvoice {
+  --ov-bg: #0f1419;
+  --ov-text: #e7e9ee;
+  --ov-orange: #2dd4bf;
+  --ov-peach: #c4cad4;
+  --ov-salmon: #f87171;
+  --ov-mauve: #64748b;
+  --ov-plum: #475569;
+  --ov-violet: #a78bfa;
+  --ov-sky: #38bdf8;
+  --ov-tan: #e2e8f0;
+  --ov-pale: #fcd34d;
+  --ov-surface: #161c24;
+  --ov-border: #232c38;
+  --ov-on-accent: #06231f;
+  --ov-font: "Exo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ===================== HonedEdge theme — warm dark olive + gold ============== */
+.theme-honededge {
+  --ov-bg: #1a1d16;
+  --ov-text: #ece9df;
+  --ov-orange: #c79a4a; /* warm gold (HonedEdge primary) */
+  --ov-peach: #cfccbe;
+  --ov-salmon: #d98a64;
+  --ov-mauve: #6b6f5b;
+  --ov-plum: #4b5038;
+  --ov-violet: #b6a9c2;
+  --ov-sky: #9bb37a; /* olive-light (HonedEdge brand green) */
+  --ov-tan: #a4b86e; /* olive */
+  --ov-pale: #e6cf93;
+  --ov-surface: #22251b;
+  --ov-border: #353a28;
+  --ov-on-accent: #211d10;
+  --ov-font: "Exo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ===================== Light mode (clean themes) ============================
+   Mode is orthogonal to theme: a `mode-light` class on the root flips the
+   surfaces + text to light, while the brand accent and on-accent stay put.
+   The base shell is dark-only for now (no light override). */
+.theme-openvoice.mode-light {
+  --ov-bg: #eef1f5;
+  --ov-text: #1b2430;
+  --ov-peach: #54606f;
+  --ov-tan: #1b2430;
+  --ov-sky: #0e7490;
+  --ov-surface: #ffffff;
+  --ov-border: #d6dde6;
+}
+.theme-honededge.mode-light {
+  --ov-bg: #f3f1e8;
+  --ov-text: #2a2c22;
+  --ov-peach: #5f5e50;
+  --ov-tan: #2a2c22;
+  --ov-sky: #5c6b2e;
+  --ov-surface: #fbfaf3;
+  --ov-border: #ddd7c6;
+}
+
+/* Structural surfaces that were hardcoded dark in app.css now read these tokens.
+   Defaults (dark) live in the shared clean-chrome block; light flips them here. */
+.ov-shell:not(.theme-base).mode-light {
+  --field-bg: rgba(20, 30, 45, 0.05);
+  --row-bg: rgba(20, 30, 45, 0.04);
+  --modal-bg: var(--ov-surface);
+}

@@ -1,0 +1,273 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   OpenVoice UI shell — responsive, pure CSS, no images.
+   Layout: top-left "elbow" frame around a content area, color-block rail on
+   the left, header/footer bars top and bottom. Thin black gaps between
+   panels are intentional — part of the console-style look.
+
+   Sizes use clamp() / vw so the shell looks sharp from ~260px (preview
+   pane / phone portrait) up to desktop.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --ov-bg: #000;
+  --ov-text: #ffcc99;
+  --ov-orange: #ff9c00;
+  --ov-peach: #ffcc99;
+  --ov-salmon: #ff6666;
+  --ov-mauve: #cc99cc;
+  --ov-plum: #cc6699;
+  --ov-violet: #9999ff;
+  --ov-sky: #99ccff;
+  --ov-tan: #ffcc66;
+  --ov-pale: #ffff99;
+
+  --gap: 3px;
+  --rail-w: clamp(56px, 14vw, 140px);
+  --bar-h:  clamp(40px, 8vw, 60px);
+  --foot-h: clamp(28px, 5vw, 40px);
+  --elbow-r: clamp(28px, 7vw, 60px);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--ov-bg);
+  color: var(--ov-text);
+  font-family: "Antonio", "Helvetica Neue", "Arial Narrow", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ── Outer grid ─────────────────────────────────────────────────────────── */
+.ov-shell {
+  display: grid;
+  grid-template-columns: var(--rail-w) 1fr;
+  grid-template-rows: var(--bar-h) 1fr var(--foot-h);
+  gap: var(--gap);
+  height: 100vh;            /* fallback for browsers without dvh */
+  height: 100dvh;          /* dynamic viewport — excludes mobile browser/system chrome */
+  /* Respect device safe areas (Fold taskbar, notches) — needs viewport-fit=cover
+     in index.html. On desktop the insets are 0, so max() keeps the original gap. */
+  padding: var(--gap);
+  padding-top: max(var(--gap), env(safe-area-inset-top));
+  padding-right: max(var(--gap), env(safe-area-inset-right));
+  padding-bottom: max(var(--gap), env(safe-area-inset-bottom));
+  padding-left: max(var(--gap), env(safe-area-inset-left));
+  background: var(--ov-bg);
+}
+
+/* ── Elbows + bars ──────────────────────────────────────────────────────── */
+.elbow-tl,
+.bar-top,
+.rail,
+.elbow-bl,
+.bar-bottom { background: var(--ov-orange); }
+
+.elbow-tl {
+  grid-column: 1; grid-row: 1;
+  border-top-left-radius: var(--elbow-r);
+  border-bottom-right-radius: clamp(8px, 2vw, 20px);
+}
+.elbow-bl {
+  grid-column: 1; grid-row: 3;
+  border-bottom-left-radius: var(--elbow-r);
+  border-top-right-radius: clamp(8px, 2vw, 20px);
+}
+.bar-top {
+  grid-column: 2; grid-row: 1;
+  border-bottom-right-radius: clamp(8px, 2vw, 20px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(8px, 2vw, 24px);
+  color: var(--ov-bg);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  gap: 8px;
+  overflow: hidden;
+}
+.bar-top .label {
+  font-size: clamp(0.85rem, 2.4vw, 1.5rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bar-top .tagline {
+  font-size: clamp(0.65rem, 1.5vw, 1rem);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+.bar-bottom {
+  grid-column: 2; grid-row: 3;
+  border-top-right-radius: clamp(8px, 2vw, 20px);
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(8px, 2vw, 24px);
+  color: var(--ov-bg);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: clamp(0.6rem, 1.3vw, 0.85rem);
+  gap: clamp(8px, 2vw, 24px);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ── Left rail ──────────────────────────────────────────────────────────── */
+.rail {
+  grid-column: 1; grid-row: 2;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding-top: var(--gap);
+}
+.rail .block {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 clamp(4px, 1vw, 12px) clamp(2px, 0.5vw, 6px);
+  color: var(--ov-bg);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: clamp(0.55rem, 1.1vw, 0.85rem);
+  min-height: clamp(20px, 4vw, 32px);
+  overflow: hidden;
+}
+.rail .block.tall { flex: 1; min-height: clamp(40px, 8vw, 60px); }
+
+/* Hide tiny rail labels at very narrow widths */
+@media (max-width: 380px) {
+  .rail .block { font-size: 0; }
+}
+
+/* ── Main content area ──────────────────────────────────────────────────── */
+.content {
+  grid-column: 2; grid-row: 2;
+  display: grid;
+  gap: clamp(10px, 2vw, 22px);
+  padding: clamp(8px, 1.5vw, 18px) clamp(4px, 1vw, 10px);
+  overflow: hidden;
+  min-width: 0;
+  /* Positioning context so absolutely-positioned overlays land inside the
+     content panel rather than the viewport. */
+  position: relative;
+}
+
+.answer {
+  flex: 1 1 0;
+  max-width: 320px;
+  min-height: clamp(44px, 8vw, 64px);
+  border: 0;
+  background: var(--ov-mauve);
+  color: var(--ov-bg);
+  font-family: inherit;
+  font-size: clamp(0.9rem, 2vw, 1.4rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: filter 120ms ease, transform 80ms ease;
+  align-self: center;
+  width: 100%;
+}
+@media (min-width: 520px) {
+  .answer { width: auto; }
+}
+.answer:hover { filter: brightness(1.12); }
+.answer:active { transform: scale(0.98); }
+/* Faded/greyed when not yet actionable — e.g. Run Program before a mode is
+   picked on the start screen. (2026-06-11) */
+.answer:disabled {
+  opacity: 0.35;
+  filter: grayscale(0.7);
+  cursor: not-allowed;
+  transform: none;
+}
+.answer:disabled:hover { filter: grayscale(0.7); }
+
+.answer.idk        { background: var(--ov-violet); }
+
+.answer.go     { background: var(--ov-orange); min-width: clamp(160px, 30vw, 240px); }
+
+/* Bottom-bar pill controls (Diag toggle, End Program). */
+.bar-bottom { justify-content: flex-start; }
+
+/* At narrow widths the decorative status text is dropped so the
+   Diag toggle and End Program button always fit. */
+@media (max-width: 480px) {
+  .bar-bottom .status-text { display: none; }
+}
+
+/* Hero strip on the admin DataCardView — character image on the left,
+   catchphrase quote on the right. Image + quote both surface above
+   the per-category answer matrix so the curator can see "what does
+   this character look + sound like?" at a glance. Missing image or
+   quote falls back to [Image not Found] / [Quote not Found] in a
+   muted accent color. */
+
+/* Smooth scroll for the anchor jumps — feels less abrupt than
+   the default instant-jump when clicking a category pill. */
+html { scroll-behavior: smooth; }
+
+/* Voice Bench (dev-only TTS) — name + line → Generate → inline player per clip. */
+.tts-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.tts-text {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 156, 0, 0.25);
+  border-radius: 3px;
+  color: var(--ov-peach);
+  font: inherit;
+  padding: 8px 10px;
+  resize: vertical;
+}
+.tts-text:focus-visible { outline: 2px solid var(--ov-tan); outline-offset: 1px; }
+.tts-actions { display: flex; align-items: center; gap: 12px; }
+.tts-status { font-size: 0.9em; opacity: 0.85; }
+.tts-list { display: flex; flex-direction: column; gap: 10px; max-height: 52vh; overflow-y: auto; padding-right: 6px; }
+.tts-clip { background: rgba(0, 0, 0, 0.18); border-radius: 3px; padding: 8px 10px; }
+.tts-clip-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.tts-clip-name { font-weight: 700; color: var(--ov-tan); }
+.tts-clip-meta { font-size: 0.85em; opacity: 0.7; }
+.tts-reuse {
+  margin-left: auto;
+  appearance: none;
+  border: 1px solid rgba(255, 156, 0, 0.25);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.8em;
+  border-radius: 2px;
+  padding: 1px 6px;
+  cursor: pointer;
+}
+.tts-reuse:hover { background: rgba(255, 156, 0, 0.18); color: var(--ov-tan); }
+.tts-audio { width: 100%; height: 34px; }
+
+/* ── Diagnostic viewscreen (debug mode only) ────────────────────────────── */
+
+@keyframes example-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes boot-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.08; }
+}
+
+@keyframes scanline-roll {
+  from { background-position-y: 0; }
+  to   { background-position-y: 4px; }
+}
+

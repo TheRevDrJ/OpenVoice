@@ -1,0 +1,848 @@
+/* OpenVoice-specific styles layered on top of the base UI sheet (ov.css). */
+
+.tts-knobs {
+  display: flex;
+  gap: clamp(12px, 2vw, 24px);
+  flex-wrap: wrap;
+}
+.tts-knobs label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 180px;
+  font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ov-tan);
+}
+.tts-knobs input[type="range"] {
+  accent-color: var(--ov-orange);
+  width: 100%;
+}
+.voice-select {
+  background: var(--field-bg, rgba(0, 0, 0, 0.35));
+  color: var(--ov-peach);
+  border: 1px solid var(--ov-orange);
+  border-radius: 3px;
+  font: inherit;
+  padding: 6px 8px;
+  letter-spacing: 0.04em;
+}
+.voice-select:focus-visible {
+  outline: 2px solid var(--ov-tan);
+  outline-offset: 1px;
+}
+/* Native option popups render on the OS's own surface (light grey on Windows),
+   where the light peach control text is unreadable — force a dark, legible menu. */
+.voice-select option {
+  background: #16181d;
+  color: #f3ead6;
+}
+
+/* Tab bar — Design / Synthesis */
+.tab-bar {
+  display: flex;
+  gap: 3px;
+  margin-bottom: clamp(10px, 1.8vw, 18px);
+}
+.tab-btn {
+  flex: 0 0 auto;
+  border: 0;
+  background: var(--ov-sky);
+  color: var(--ov-bg);
+  font: inherit;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: clamp(0.7rem, 1.5vw, 1rem);
+  padding: clamp(8px, 1.2vw, 12px) clamp(18px, 3vw, 36px);
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 120ms ease, filter 120ms ease;
+}
+.tab-btn:hover {
+  filter: brightness(1.12);
+}
+.tab-btn.active {
+  background: var(--ov-orange);
+  opacity: 1;
+}
+
+/* Listen tab — review channel */
+.listen-panel {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.5vw, 14px);
+  min-height: 0;
+  max-height: 62vh;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+.listen-dir {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: clamp(0.7rem, 1.3vw, 0.9rem);
+  letter-spacing: 0.04em;
+  color: var(--ov-tan);
+}
+.listen-dir code {
+  color: var(--ov-sky);
+  background: var(--field-bg, rgba(0, 0, 0, 0.3));
+  padding: 4px 8px;
+  border-radius: 3px;
+  word-break: break-all;
+  font-size: 0.95em;
+}
+.listen-caption {
+  color: var(--ov-peach);
+  font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+/* Voice-design A/B/C audition cards */
+.variant-grid {
+  display: flex;
+  gap: clamp(8px, 1.5vw, 14px);
+  flex-wrap: wrap;
+  margin-top: clamp(10px, 1.8vw, 16px);
+}
+.variant-card {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--row-bg, rgba(0, 0, 0, 0.22));
+  border-radius: 4px;
+  padding: 10px;
+}
+.variant-label {
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ov-tan);
+  font-size: clamp(0.7rem, 1.4vw, 0.9rem);
+}
+.variant-save {
+  min-height: 38px;
+  min-width: 0;
+  width: 100%;
+  font-size: clamp(0.72rem, 1.4vw, 0.95rem);
+  letter-spacing: 0.1em;
+}
+
+/* Merged Synthesis split into two independently-scrolling panes:
+   left = voice list (browse/audition/pick), right = workspace + output. */
+.tts-form.synth-split {
+  display: grid;
+  grid-template-columns: minmax(240px, 38%) 1fr;
+  gap: clamp(12px, 2vw, 24px);
+  align-items: stretch;
+  min-height: 0;
+}
+.synth-left,
+.synth-right {
+  min-height: 0;
+  min-width: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.5vw, 14px);
+}
+/* In the split the list fills its pane — the pane scrolls, not the list. */
+.synth-left .voice-list {
+  max-height: none;
+  overflow: visible;
+  margin-bottom: 0;
+}
+@media (max-width: 760px) {
+  .tts-form.synth-split {
+    grid-template-columns: 1fr;
+  }
+  .synth-left,
+  .synth-right {
+    max-height: none;
+  }
+}
+
+/* Merged Synthesis: the voice list (audition + manage + pick the active voice) */
+.voice-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.2vw, 10px);
+  max-height: 34vh;
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-bottom: clamp(8px, 1.6vw, 14px);
+}
+.voice-row-pick {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.voice-row-pick:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.voice-row-pick:hover:not(:disabled) .voice-row-name {
+  color: var(--ov-orange);
+}
+.active-voice {
+  font-size: clamp(0.7rem, 1.3vw, 0.9rem);
+  letter-spacing: 0.04em;
+  color: var(--ov-sky);
+  margin-bottom: 8px;
+}
+.active-voice b {
+  color: var(--ov-tan);
+}
+
+/* Voice Library rows */
+.voice-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 16px);
+  background: var(--row-bg, rgba(0, 0, 0, 0.2));
+  border-radius: 4px;
+  padding: 8px 12px;
+  flex-wrap: wrap;
+}
+.voice-row.active {
+  background: rgba(255, 153, 0, 0.14);
+  box-shadow: inset 0 0 0 2px var(--ov-orange);
+}
+.voice-row-main {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.voice-row-name {
+  font-weight: 700;
+  color: var(--ov-tan);
+  letter-spacing: 0.04em;
+}
+.voice-row-meta {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  color: var(--ov-peach);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.voice-row-actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 14px);
+  flex-wrap: wrap;
+}
+.voice-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ov-sky);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.voice-toggle input {
+  accent-color: var(--ov-orange);
+}
+.voice-sample {
+  height: 40px;
+  width: clamp(220px, 30vw, 340px);
+}
+
+/* Inline emotion-tag hint under the synthesis text */
+.emo-tag-hint {
+  font-size: clamp(0.8rem, 1.45vw, 0.97rem);
+  color: var(--ov-peach);
+  opacity: 0.65;
+  margin: 6px 0 2px;
+  letter-spacing: 0.02em;
+}
+.emo-tag-hint code {
+  color: var(--ov-sky);
+  background: var(--field-bg, rgba(0, 0, 0, 0.3));
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* Progressive disclosure — the "How does this work?" expand (rules.md §8). */
+.how-it-works {
+  margin-top: 8px;
+}
+.how-it-works > summary {
+  cursor: pointer;
+  width: fit-content;
+  list-style: none;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+.how-it-works > summary::-webkit-details-marker {
+  display: none;
+}
+.how-it-works > summary::before {
+  content: "▸ ";
+}
+.how-it-works[open] > summary::before {
+  content: "▾ ";
+}
+.how-it-works-body {
+  margin-top: 5px;
+}
+
+/* Tools tab — standalone capture utilities. */
+.tool-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+.tool-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--ov-border, rgba(255, 255, 255, 0.18));
+  border-radius: 10px;
+}
+.tool-name {
+  font-weight: 600;
+  color: var(--ov-text);
+}
+.tool-sub {
+  font-size: 0.85em;
+  opacity: 0.7;
+  margin-top: 2px;
+  color: var(--ov-peach);
+}
+
+/* Emotion controls greyed out when the picked voice can't emote */
+
+/* Action row: breathing room above, and a right-sized button (not the big
+   game-button default that stretches across the panel). */
+.tts-actions {
+  margin-top: clamp(14px, 2.2vw, 22px);
+}
+.tts-actions .answer {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(6px, 0.9vw, 9px) clamp(16px, 2.6vw, 28px);
+  font-size: clamp(0.8rem, 1.6vw, 1.05rem);
+}
+/* Make the SEC / MIN in the timed-capture buttons pop — bigger + heaviest weight,
+   so the two buttons are scannable at a glance. */
+.cap-unit {
+  font-size: 1.35em;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  vertical-align: baseline;
+}
+.voice-del {
+  appearance: none;
+  border: 0;
+  background: rgba(255, 100, 100, 0.15);
+  color: var(--ov-salmon);
+  font-family: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.voice-del:hover:not(:disabled) {
+  background: rgba(255, 100, 100, 0.3);
+}
+.voice-del:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: rgba(255, 100, 100, 0.08);
+}
+
+/* Voice-design sub-panel */
+.design-form {
+  margin-bottom: clamp(6px, 1.2vw, 12px);
+}
+.design-row {
+  display: flex;
+  gap: clamp(8px, 1.4vw, 12px);
+  flex-wrap: wrap;
+}
+.design-input {
+  flex: 1 1 200px;
+  background: var(--field-bg, rgba(0, 0, 0, 0.3));
+  border: 1px solid var(--ov-orange);
+  border-radius: 3px;
+  color: var(--ov-peach);
+  font: inherit;
+  padding: 8px 10px;
+  letter-spacing: 0.02em;
+}
+.design-input::placeholder {
+  color: color-mix(in srgb, var(--ov-peach) 60%, transparent);
+}
+.design-input:focus-visible {
+  outline: 2px solid var(--ov-tan);
+  outline-offset: 1px;
+}
+/* The row's flex-grow (flex: 1 1 200px) is meant for side-by-side inputs in .design-row.
+   A standalone input directly in the flex-COLUMN form reads that 200px as height and grows
+   into a giant box — pin direct-child inputs to single-line, full-width. */
+.tts-form > .design-input {
+  flex: 0 0 auto;
+}
+.design-desc {
+  flex: 2 1 320px;
+}
+/* Status hints have no color of their own → they inherit the UI accent, which is
+   invisible on a light surface. Pin a muted, theme-aware color so they read in both modes. */
+.tts-status {
+  color: var(--ov-peach);
+}
+
+/* Voice Lab — mode selector (Text to Voice / 10-Second / 30-Minute) */
+.mode-seg {
+  display: inline-flex;
+  gap: 0;
+  background: var(--field-bg, rgba(0, 0, 0, 0.3));
+  border-radius: 999px;
+  padding: 4px;
+  margin-bottom: clamp(12px, 2vw, 18px);
+  flex-wrap: wrap;
+}
+.mode-btn {
+  border: 0;
+  background: transparent;
+  color: var(--ov-peach);
+  font: inherit;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: clamp(0.62rem, 1.2vw, 0.82rem);
+  padding: 8px clamp(14px, 2.2vw, 22px);
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 120ms ease, background 120ms ease;
+}
+.mode-btn:hover {
+  opacity: 1;
+}
+.mode-btn.active {
+  background: var(--ov-orange);
+  color: var(--ov-bg);
+  opacity: 1;
+}
+
+/* Voice Lab — required creation metadata (gender + internal-only) */
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.5vw, 28px);
+  flex-wrap: wrap;
+  margin-top: clamp(8px, 1.5vw, 12px);
+}
+.meta-gender {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.meta-label {
+  font-size: clamp(0.62rem, 1.2vw, 0.78rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ov-tan);
+}
+.meta-internal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ov-sky);
+  font-size: clamp(0.7rem, 1.3vw, 0.82rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.meta-internal input {
+  accent-color: var(--ov-orange);
+}
+
+/* Small segmented control — gender M/F (Voice Lab + Voice Library rows) */
+.mini-seg {
+  display: inline-flex;
+  background: var(--field-bg, rgba(0, 0, 0, 0.3));
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.mini-btn {
+  border: 0;
+  background: transparent;
+  color: var(--ov-peach);
+  font: inherit;
+  font-size: clamp(0.66rem, 1.2vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.mini-btn:hover:not(:disabled) {
+  opacity: 1;
+}
+.mini-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.mini-btn.active {
+  background: var(--ov-orange);
+  color: var(--ov-bg);
+  opacity: 1;
+}
+
+/* Voice Lab — input source toggle (Upload file / Record from tab) */
+.source-seg {
+  display: inline-flex;
+  background: var(--field-bg, rgba(0, 0, 0, 0.3));
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  margin: clamp(8px, 1.5vw, 14px) 0;
+}
+
+/* Voice Library — the creation prompt as a compact chip (hover = full text via
+   title tooltip, click = copy to clipboard) plus reuse. Keeps rows short. */
+.voice-prompt {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.prompt-chip {
+  background: rgba(255, 153, 0, 0.12);
+  border: 1px solid rgba(255, 153, 0, 0.45);
+  color: var(--ov-tan);
+  font: inherit;
+  font-size: clamp(0.64rem, 1.2vw, 0.76rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.prompt-chip:hover {
+  background: rgba(255, 153, 0, 0.22);
+}
+
+/* Gender — read-only indicator in the Library: the word in a fixed-width box so
+   every row's columns stay aligned. (Editable as a dropdown in Voice Lab.) */
+.gender-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 116px;
+  padding: 6px 4px;
+  border: 1px solid rgba(255, 153, 0, 0.4);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ov-peach);
+  font-weight: 700;
+  font-size: clamp(0.62rem, 1.2vw, 0.74rem);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* Generic icon button (e.g. Clip Library "open folder") */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--ov-sky);
+}
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ov-orange);
+}
+
+/* Clip Library favorite star — dim outline off, gold when on. */
+.clip-fav {
+  color: var(--ov-peach);
+  opacity: 0.55;
+}
+.clip-fav:hover {
+  opacity: 1;
+}
+.clip-fav.on {
+  color: var(--ov-gold, #ffcc33);
+  opacity: 1;
+}
+/* "★ only" favorites toggle in the Clip Library filter bar. */
+.clip-fav-filter {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+/* Show/hide eye toggle (Voice Library) */
+.eye-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--ov-sky);
+}
+.eye-btn.off {
+  color: var(--ov-salmon);
+  opacity: 0.85;
+}
+.eye-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+}
+.eye-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Warning modal (internal-use-only voice at generate time) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.66);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+}
+.modal-card {
+  background: var(--modal-bg, #0b0e16);
+  border: 2px solid var(--ov-orange);
+  border-radius: 12px;
+  padding: clamp(18px, 3vw, 28px);
+  max-width: 460px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+.modal-title {
+  color: var(--ov-orange);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+}
+.modal-body {
+  color: var(--ov-peach);
+  line-height: 1.5;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+}
+.modal-body b {
+  color: var(--ov-tan);
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+.modal-actions .answer {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  min-height: 0;
+  padding: 9px 20px;
+  font-size: clamp(0.78rem, 1.5vw, 0.95rem);
+}
+
+/* Voice Library — filter bar + tidy rows */
+.lib-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(10px, 1.6vw, 18px);
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 153, 0, 0.25);
+}
+.lib-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: clamp(0.58rem, 1.1vw, 0.72rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ov-tan);
+}
+.lib-filter .voice-select {
+  padding: 5px 8px;
+  font-size: 0.85rem;
+}
+.lib-count {
+  margin-left: auto;
+  align-self: center;
+  color: var(--ov-peach);
+  opacity: 0.7;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+.lib-row {
+  align-items: flex-start;
+  padding: 12px;
+  gap: clamp(10px, 1.5vw, 18px);
+}
+.lib-row .voice-row-main {
+  flex: 1 1 280px;
+}
+.lib-controls {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.5vw, 16px);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.lib-sample {
+  height: 34px;
+  width: clamp(180px, 22vw, 240px);
+}
+
+/* Voice Lab — file input + bake staged-progress */
+.bake-input {
+  padding: 6px 10px;
+}
+.bake-input::file-selector-button {
+  background: var(--ov-plum);
+  color: var(--ov-bg);
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  margin-right: 12px;
+  cursor: pointer;
+}
+.bake-input::file-selector-button:hover {
+  filter: brightness(1.12);
+}
+.bake-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: clamp(14px, 2.2vw, 22px);
+}
+.bake-steps {
+  display: flex;
+  gap: clamp(6px, 1.2vw, 12px);
+  flex-wrap: wrap;
+}
+.bake-step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  opacity: 0.4;
+  font-size: clamp(0.6rem, 1.2vw, 0.78rem);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ov-tan);
+}
+.bake-step .bake-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ov-plum);
+  flex: 0 0 auto;
+}
+.bake-step.done {
+  opacity: 1;
+}
+.bake-step.done .bake-dot {
+  background: var(--ov-sky);
+}
+.bake-step.active {
+  opacity: 1;
+}
+.bake-step.active .bake-dot {
+  background: var(--ov-orange);
+  animation: bake-pulse 1s ease-in-out infinite;
+}
+.bake-step.error {
+  opacity: 1;
+  color: var(--ov-salmon);
+}
+.bake-step.error .bake-dot {
+  background: var(--ov-salmon);
+}
+@keyframes bake-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.45);
+    opacity: 0.65;
+  }
+}
+.bake-bar {
+  height: 8px;
+  background: var(--field-bg, rgba(0, 0, 0, 0.35));
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bake-bar-fill {
+  height: 100%;
+  background: var(--ov-orange);
+  border-radius: 999px;
+  transition: width 400ms ease;
+}
+
+/* Let the content panel scroll if many clips stack up. The tab-bar is the fixed
+   header (auto); .studio-body takes the remaining 1fr and scrolls internally, so
+   tall output (e.g. the 3 design takes) is reachable without resizing the window. */
+.content.studio {
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+.studio-body {
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2vw, 18px);
+}

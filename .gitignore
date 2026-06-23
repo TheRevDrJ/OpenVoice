@@ -1,0 +1,89 @@
+# ============================================================================
+# PRIVATE — never enters git (public OR private remote). On-disk only, Dropbox-
+# backed. This is the public/private line for the project. Audit before any
+# public push: `git ls-files` must show ONLY code + README + SETUP + LICENSE.
+# ============================================================================
+# Local working files and notes — not part of the product.
+/bob/
+/index.md
+# Internal research and development notes.
+/docs/
+# Deployment tooling and one-time setup. End users get README.md + SETUP.txt.
+/deploy/
+# Editor / agent configuration — not part of the product.
+/.claude/
+# Internal API smoke-test — not part of the product.
+/scripts/test_api.py
+
+# --- Scratch / commit-message staging ---
+.bobcommit*
+scratch.py
+scratch.*
+
+# --- Python ---
+.uvpython/
+# VoxCPM voice-design worker venv — built in-project (Dropbox-backed), regenerable
+# via `uv sync`. Ignore the dir's contents (the .venv etc.) but KEEP its pinned
+# spec in git so a fresh clone / setup.bat can reproduce the worker (mirrors server/).
+/voxcpm/*
+!/voxcpm/pyproject.toml
+!/voxcpm/uv.lock
+# Model-trial workspaces (scratch venvs, A/B harnesses, rendered samples) — ephemeral
+# experiments; the permanent record is docs/engine-trials-log.md.
+/trials/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+# Deploy/runtime artifacts created on a target box (openvoice.bat logs, the external
+# IndexTTS2 clone setup.bat makes) — regenerable, never committed.
+/logs/
+/engines-external/
+
+# --- Node / frontend ---
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# --- Env / secrets ---
+.env
+.env.*
+!.env.example
+*.local
+
+# --- Heavy TTS artifacts (these live OUTSIDE the tree on local-only disk;
+#     guarded here in case anything lands in-repo) ---
+/models/
+/weights/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+/output/
+/audio_out/
+*.wav
+*.mp3
+*.flac
+*.ogg
+
+# --- Generated audio outputs: Dropbox-backed, NOT in git (transient / bulky) ---
+/data/out/
+/data/preview/
+/data/listen/
+
+# --- Voices (clips + registry) are USER DATA: Dropbox-backed, NEVER in git (public
+#     OR private). The built-in "Computer" voice ships in code (server/app/voices.py),
+#     so a fresh clone still has one sample voice with zero data in the repo. Hard rule
+#     since 2026-06-23 — internal/cloned voice clips must never reach a repo again. ---
+/data/voices/
+
+*.tmp.*
+
+# --- OS cruft ---
+Thumbs.db
+.DS_Store

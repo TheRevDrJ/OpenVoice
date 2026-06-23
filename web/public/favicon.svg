@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 310" width="420" height="310" role="img" aria-label="OpenVoice">
+  <title>OpenVoice</title>
+  <defs>
+    <linearGradient id="blue-grad" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#4A90D9"/>
+      <stop offset="100%" stop-color="#1A4A7A"/>
+    </linearGradient>
+    <linearGradient id="orange-grad" x1="0.7" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#F5A623"/>
+      <stop offset="100%" stop-color="#D4792A"/>
+    </linearGradient>
+    <clipPath id="left-half"><rect x="0" y="0" width="210" height="310"/></clipPath>
+    <clipPath id="right-half"><rect x="210" y="0" width="210" height="310"/></clipPath>
+    <clipPath id="oval-clip"><ellipse cx="210" cy="155" rx="200" ry="148"/></clipPath>
+    <mask id="mic-grille">
+      <rect x="289" y="90" width="52" height="112" rx="26" fill="white"/>
+      <circle cx="304" cy="110" r="2.6" fill="black"/>
+      <circle cx="315" cy="110" r="2.6" fill="black"/>
+      <circle cx="326" cy="110" r="2.6" fill="black"/>
+      <circle cx="304" cy="124" r="2.6" fill="black"/>
+      <circle cx="315" cy="124" r="2.6" fill="black"/>
+      <circle cx="326" cy="124" r="2.6" fill="black"/>
+      <circle cx="304" cy="138" r="2.6" fill="black"/>
+      <circle cx="315" cy="138" r="2.6" fill="black"/>
+      <circle cx="326" cy="138" r="2.6" fill="black"/>
+      <circle cx="304" cy="152" r="2.6" fill="black"/>
+      <circle cx="315" cy="152" r="2.6" fill="black"/>
+      <circle cx="326" cy="152" r="2.6" fill="black"/>
+    </mask>
+  </defs>
+
+  <!-- Oval: blue left, gold right (HonedEdge family) -->
+  <g clip-path="url(#oval-clip)">
+    <g clip-path="url(#left-half)"><rect x="0" y="0" width="420" height="310" fill="url(#blue-grad)"/></g>
+    <g clip-path="url(#right-half)"><rect x="0" y="0" width="420" height="310" fill="url(#orange-grad)"/></g>
+
+    <!-- White center divider -->
+    <line x1="210" y1="7" x2="210" y2="303" stroke="white" stroke-width="6"/>
+
+    <!-- Cross — nudged right to sit optically centered on the blue lens -->
+    <g transform="translate(14,0)">
+      <rect x="91" y="72" width="28" height="166" rx="3" fill="white"/>
+      <rect x="48" y="115" width="115" height="28" rx="3" fill="white"/>
+    </g>
+
+    <!-- Studio mic — nudged left and up to center on the gold lens; the cradle arc
+         is concentric with the capsule's rounded bottom for an even gap -->
+    <g transform="translate(-11,-14)">
+      <rect x="289" y="90" width="52" height="112" rx="26" fill="white" mask="url(#mic-grille)"/>
+      <path d="M271 176 A44 44 0 0 0 359 176" fill="none" stroke="white" stroke-width="9" stroke-linecap="round"/>
+      <rect x="309" y="218" width="12" height="22" fill="white"/>
+      <rect x="289" y="240" width="52" height="11" rx="5" fill="white"/>
+    </g>
+  </g>
+
+  <!-- Oval outline -->
+  <ellipse cx="210" cy="155" rx="200" ry="148" fill="none" stroke="white" stroke-width="4"/>
+</svg>

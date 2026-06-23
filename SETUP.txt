@@ -1,0 +1,113 @@
+================================================================================
+  OpenVoice — Setup & Deployment
+  Self-hosted voice synthesis and cloning. Part of the HonedEdge Foundation.
+================================================================================
+
+OpenVoice is a GPU app: it runs entirely on your own NVIDIA hardware, with no
+cloud dependency. Setup is a deliberate, one-time deployment — not a one-click
+installer — and that's by design. These are complex AI engines; a clean staged
+install you control beats a black box.
+
+This mirrors how OpenEar (our captioning app) installs, on purpose: one muscle
+memory for both.
+
+
+--------------------------------------------------------------------------------
+  WHAT YOU NEED FIRST (do these by hand, once)
+--------------------------------------------------------------------------------
+
+1) An NVIDIA GPU with the FULL driver package from nvidia.com.
+   IMPORTANT: nvidia-smi existing is NOT enough. Windows Update installs a basic
+   display driver that provides nvidia-smi but NOT the CUDA runtime DLLs OpenVoice
+   uses. Install the full Game Ready or Studio driver from:
+       https://www.nvidia.com/drivers
+   ...then restart. setup.bat re-verifies the CUDA runtime actually loads and will
+   warn you if only the basic driver is present.
+
+2) Python is handled for you — setup.bat installs uv (our package manager) and uv
+   fetches Python 3.11 itself. You do NOT need to install Python by hand. (OpenVoice
+   pins 3.11; the TTS engines are built against it.)
+
+3) Node.js LTS (only if you want setup.bat to build the web UI on this box):
+       https://nodejs.org
+
+
+--------------------------------------------------------------------------------
+  INSTALL
+--------------------------------------------------------------------------------
+
+1) Get the code: download the .zip from GitHub (Code -> Download ZIP) or
+   `git clone`, and extract it somewhere permanent (e.g. C:\OpenVoice).
+
+2) Right-click setup.bat -> "Run as administrator".
+   (Admin is needed for the firewall rule, long-path support, and the VC++ runtime.)
+
+   setup.bat will:
+     - check the NVIDIA driver / CUDA runtime
+     - install uv + Python 3.11
+     - enable long paths, add the firewall rule, install the VC++ runtime
+     - build the two engine venvs from their pinned uv.lock files
+         * server/  -> Chatterbox backend (default voice, knobs, 10-second clones)
+         * voxcpm/  -> VoxCPM design worker (text-to-voice + baked-LoRA clones)
+     - build the web UI into web\dist
+     - pre-download the models (Chatterbox + VoxCPM2)
+
+   Flags:
+     setup.bat --remote        also install Git, Tailscale, SSH, and Remote Desktop
+                               for headless management (recommended on a server box)
+
+3) When it finishes, start it:
+       openvoice.bat start
+   then open  http://localhost:5601  on this machine, or
+       http://THIS-PCS-NAME:5601     from any other device on the network.
+
+   That's it. The backend serves the web UI AND the API on a single port (5601) —
+   there is no separate web server to run.
+
+
+--------------------------------------------------------------------------------
+  RUNNING IT (openvoice.bat)
+--------------------------------------------------------------------------------
+
+  openvoice.bat start      start everything in the background (headless)
+  openvoice.bat stop       stop all OpenVoice processes
+  openvoice.bat restart    stop and restart
+  openvoice.bat status     show which engines are running
+  openvoice.bat verbose    run with live logs in the window (Ctrl+C to stop)
+  openvoice.bat log        follow the log file
+  openvoice.bat version    show the version
+
+  Two processes run: the backend (5601, the one you connect to) and the VoxCPM
+  design + clone worker (5602). The backend proxies to the worker; if the worker
+  is down, only voice design / VoxCPM cloning is unavailable.
+
+
+--------------------------------------------------------------------------------
+  MOVING VOICES BETWEEN MACHINES
+--------------------------------------------------------------------------------
+
+Designed voices and 10-second clones travel with the code — they are just a small
+reference clip plus a line in data/voices/voices.json.
+
+A 30-minute baked (fine-tuned) voice needs THREE pieces copied together to a new
+machine's data\voices folder:
+    1. its line in voices.json
+    2. its reference clip  (e.g. myvoice.wav)
+    3. its adapter folder  (data\voices\loras\<name>\)  -- includes the .safetensors
+The adapter is referenced by a relative name, so once those three are in place on
+the new box, the voice just works.
+
+
+--------------------------------------------------------------------------------
+  TROUBLESHOOTING
+--------------------------------------------------------------------------------
+
+- "CUDA runtime could not be loaded" during setup: you have the basic Windows
+  display driver, not the full NVIDIA driver. Install from nvidia.com, restart,
+  re-run setup.
+
+- First `openvoice start` is slow: it's downloading models. Watch with
+  `openvoice log`. Subsequent starts are fast.
+
+- Voice design / VoxCPM cloning 503s: the VoxCPM worker isn't running.
+  `openvoice status` shows what's up; `openvoice restart` brings it back.
