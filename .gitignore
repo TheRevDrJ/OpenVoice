@@ -1,9 +1,7 @@
 # ============================================================================
-# PRIVATE — never enters git (public OR private remote). On-disk only, Dropbox-
-# backed. This is the public/private line for the project. Audit before any
-# public push: `git ls-files` must show ONLY code + README + SETUP + LICENSE.
+# Private — local working files, not shipped. Dropbox-backed.
 # ============================================================================
-# Local working files and notes — not part of the product.
+# Local working files and notes.
 /bob/
 /index.md
 # Internal research and development notes.
@@ -39,8 +37,8 @@ env/
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
-# Deploy/runtime artifacts created on a target box (openvoice.bat logs, the external
-# IndexTTS2 clone setup.bat makes) — regenerable, never committed.
+# Deploy/runtime artifacts created on a target box (logs, generated setup files,
+# externally-cloned engine checkouts) — regenerable, never committed.
 /logs/
 /engines-external/
 
@@ -76,10 +74,9 @@ dist/
 /data/preview/
 /data/listen/
 
-# --- Voices (clips + registry) are USER DATA: Dropbox-backed, NEVER in git (public
-#     OR private). The built-in "Computer" voice ships in code (server/app/voices.py),
-#     so a fresh clone still has one sample voice with zero data in the repo. Hard rule
-#     since 2026-06-23 — internal/cloned voice clips must never reach a repo again. ---
+# --- Voices (clips + registry) are user data: Dropbox-backed, kept out of the repo.
+#     The built-in "Computer" voice ships in code (server/app/voices.py), so a fresh
+#     clone still has one sample voice with zero data in the repo. ---
 /data/voices/
 
 *.tmp.*
