@@ -123,7 +123,7 @@ function EyeIcon({ off }: { off?: boolean }) {
   );
 }
 
-// Progressive disclosure — plain copy by default, the technical "how" one click away (rules.md §8).
+// Progressive disclosure — plain copy by default, the technical "how" one click away.
 function HowItWorks({ children }: { children: ReactNode }) {
   return (
     <details className="how-it-works">
