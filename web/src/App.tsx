@@ -146,10 +146,11 @@ const BAKE_STAGES: { key: string; label: string }[] = [
 const SAMPLE = "A gentle rain fell over the city as the evening lights came on.";
 
 // Selectable UI themes. Extensible: add an {id,label} here + a matching .theme-<id>
-// block in styles/themes.css. OpenVoice (clean) is the default.
+// block in styles/themes.css. Seafoam (clean) is the default.
 const THEMES = [
-  { id: "openvoice", label: "OpenVoice" },
   { id: "honededge", label: "HonedEdge" },
+  { id: "seafoam", label: "Seafoam" },
+  { id: "eggshell", label: "Eggshell" },
 ] as const;
 type ThemeId = (typeof THEMES)[number]["id"];
 
@@ -172,11 +173,11 @@ export default function App() {
   });
   const [labMode, setLabMode] = useState<LabMode>("ttv");
 
-  // UI theme — persisted; default OpenVoice (the clean look). Applied as a class on
+  // UI theme — persisted; default Seafoam (the clean look). Applied as a class on
   // the root shell so themes.css can reskin everything.
   const [theme, setTheme] = useState<ThemeId>(() => {
     const saved = localStorage.getItem("ov_theme");
-    return THEMES.some((t) => t.id === saved) ? (saved as ThemeId) : "openvoice";
+    return THEMES.some((t) => t.id === saved) ? (saved as ThemeId) : "seafoam";
   });
   useEffect(() => {
     localStorage.setItem("ov_theme", theme);

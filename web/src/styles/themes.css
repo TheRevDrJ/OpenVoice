@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    Theme engine. A theme is a class on the root .ov-shell element:
-   .theme-openvoice (default, clean teal) / .theme-honededge (warm olive+gold,
-   HonedEdge house style) / .theme-base (the legacy base skin).
+   .theme-seafoam (default, clean teal) / .theme-eggshell (warm olive+gold) /
+   .theme-base (the legacy base skin).
 
    The base shell styling (ov.css + app.css) needs no overrides for .theme-base.
    Every other theme gets the shared CLEAN CHROME below (no elbows/rail; clean header,
@@ -207,8 +207,8 @@
   filter: brightness(1.08);
 }
 
-/* ===================== OpenVoice theme (default) — dark slate + teal ========= */
-.theme-openvoice {
+/* ===================== Seafoam theme (default) — dark slate + teal ========== */
+.theme-seafoam {
   --ov-bg: #0f1419;
   --ov-text: #e7e9ee;
   --ov-orange: #2dd4bf;
@@ -226,17 +226,17 @@
   --ov-font: "Exo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-/* ===================== HonedEdge theme — warm dark olive + gold ============== */
-.theme-honededge {
+/* ===================== Eggshell theme — warm dark olive + gold ============== */
+.theme-eggshell {
   --ov-bg: #1a1d16;
   --ov-text: #ece9df;
-  --ov-orange: #c79a4a; /* warm gold (HonedEdge primary) */
+  --ov-orange: #c79a4a; /* warm gold (Eggshell primary) */
   --ov-peach: #cfccbe;
   --ov-salmon: #d98a64;
   --ov-mauve: #6b6f5b;
   --ov-plum: #4b5038;
   --ov-violet: #b6a9c2;
-  --ov-sky: #9bb37a; /* olive-light (HonedEdge brand green) */
+  --ov-sky: #9bb37a; /* olive-light (Eggshell accent) */
   --ov-tan: #a4b86e; /* olive */
   --ov-pale: #e6cf93;
   --ov-surface: #22251b;
@@ -245,11 +245,31 @@
   --ov-font: "Exo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
+/* ===================== HonedEdge (the brand) — warm dark + brand orange, with
+   the logo's blue as the secondary accent. Ported from OpenSign. ============= */
+.theme-honededge {
+  --ov-bg: #191512;
+  --ov-text: #f0ece2;
+  --ov-orange: #ee8420;   /* brand orange (logo gradient #F5A623 -> #D4792A) */
+  --ov-peach: #cdc7ba;    /* warm muted */
+  --ov-salmon: #e58a5f;
+  --ov-mauve: #8a7d6a;
+  --ov-plum: #574a3a;
+  --ov-violet: #b6a9c2;
+  --ov-sky: #4a90d9;      /* brand blue (the logo's other half) */
+  --ov-tan: #d8cdba;
+  --ov-pale: #f2c879;
+  --ov-surface: #211c17;
+  --ov-border: #3a3026;
+  --ov-on-accent: #2a1603;
+  --ov-font: "Exo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
 /* ===================== Light mode (clean themes) ============================
    Mode is orthogonal to theme: a `mode-light` class on the root flips the
    surfaces + text to light, while the brand accent and on-accent stay put.
    The base shell is dark-only for now (no light override). */
-.theme-openvoice.mode-light {
+.theme-seafoam.mode-light {
   --ov-bg: #eef1f5;
   --ov-text: #1b2430;
   --ov-peach: #54606f;
@@ -258,7 +278,7 @@
   --ov-surface: #ffffff;
   --ov-border: #d6dde6;
 }
-.theme-honededge.mode-light {
+.theme-eggshell.mode-light {
   --ov-bg: #f3f1e8;
   --ov-text: #2a2c22;
   --ov-peach: #5f5e50;
@@ -266,6 +286,15 @@
   --ov-sky: #5c6b2e;
   --ov-surface: #fbfaf3;
   --ov-border: #ddd7c6;
+}
+.theme-honededge.mode-light {
+  --ov-bg: #f5f1ea;
+  --ov-text: #2a2118;
+  --ov-peach: #6a5f50;
+  --ov-tan: #2a2118;
+  --ov-sky: #2f6fb0;
+  --ov-surface: #fdfbf6;
+  --ov-border: #e2d9c9;
 }
 
 /* Structural surfaces that were hardcoded dark in app.css now read these tokens.
