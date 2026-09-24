@@ -40,7 +40,7 @@ GPTSOVITS_PY = (GPTSOVITS_ROOT / "runtime" / "python.exe") if GPTSOVITS_ROOT els
 TRAIN_VENV_PY = _envpath("OPENVOICE_TRAIN_VENV_PY")
 TRAINER = _envpath("OPENVOICE_TRAINER")
 VOXCPM2_MODEL = _envpath("OPENVOICE_VOXCPM2_MODEL")
-# Per-job scratch (regenerable) — defaults under the model-cache root (OPENVOICE_ROOT), never Dropbox.
+# Per-job scratch (regenerable) — defaults under the model-cache root (OPENVOICE_ROOT), never the synced repo tree.
 WORK_ROOT = _envpath("OPENVOICE_VOICELAB_WORK") or (config.LOCAL_ROOT / "voicelab-jobs")
 
 _BAKE_TOOLING = {

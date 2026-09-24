@@ -6,9 +6,9 @@ import path from "node:path";
 // https://vite.dev/config/
 export default defineConfig({
   base: "./",
-  // Dep-optimization cache MUST live outside the project tree: inside Dropbox it
-  // races Vite's atomic rename (EBUSY/EPERM → white screen). Default to the OS temp
-  // dir (outside Dropbox everywhere, regenerable, no hardcoded path); override with
+  // Dep-optimization cache MUST live outside the project tree: inside a cloud-synced
+  // folder the sync client races Vite's atomic rename (EBUSY/EPERM → white screen).
+  // Default to the OS temp dir (never synced, regenerable, no hardcoded path); override with
   // OPENVOICE_VITE_CACHE if needed.
   cacheDir: process.env.OPENVOICE_VITE_CACHE || path.join(os.tmpdir(), "openvoice-vite-cache"),
   plugins: [react()],
@@ -23,7 +23,7 @@ export default defineConfig({
   },
   build: {
     // Deployed boxes build into the repo's web/dist (served single-port by the
-    // backend). On the dev box the repo is inside Dropbox, which races Vite's
+    // backend). If the repo sits in a cloud-synced folder, the sync client races Vite's
     // atomic rename (EPERM) — set OPENVOICE_DIST to an external path when building
     // there. The backend reads the same OPENVOICE_DIST to locate the built UI.
     outDir: process.env.OPENVOICE_DIST || "dist",

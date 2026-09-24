@@ -2,23 +2,24 @@
 
 Two homes:
 - USER DATA — voice clips + the ``voices.json`` registry — lives under ``data/voices``,
-  backed up by Dropbox on the dev box but **gitignored** (never committed, public or private).
-  The built-in voice ships in code, so a fresh clone still works with no data present.
+  meant to sit in a backed-up (e.g. cloud-synced) folder but **gitignored** (never
+  committed, public or private). The built-in voice ships in code, so a fresh clone still
+  works with no data present.
   Generated audio / previews / review clips (``data/out|preview|listen``) and LoRA adapter
-  weights (``*.safetensors``) are likewise gitignored and Dropbox-backed. (Hard lesson
-  2026-06-19: data parked in a non-backed-up AppData dir got wiped and took the voice library
-  with it — keep irreplaceable data in the Dropbox tree.)
+  weights (``*.safetensors``) are likewise gitignored and live in the same backed-up tree.
+  (Hard lesson: data parked in a non-backed-up AppData dir got wiped and took the voice
+  library with it — keep irreplaceable data in the backed-up repo tree.)
 - REGENERABLE BULK — model weights — is huge and freely re-downloadable, so it stays
-  OUTSIDE Dropbox to avoid pointless sync/backup churn. ``OPENVOICE_ROOT`` overrides the
-  location (e.g. a deploy box points it at its own data drive); otherwise it defaults under
-  ``%LOCALAPPDATA%``.
+  OUTSIDE the synced repo tree to avoid pointless sync/backup churn. ``OPENVOICE_ROOT``
+  overrides the location (e.g. a deploy box points it at its own data drive); otherwise it
+  defaults under ``%LOCALAPPDATA%``.
 """
 import os
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
-# --- Produced / kept data -> repo data/ tree (Dropbox-backed, gitignored) ---
+# --- Produced / kept data -> repo data/ tree (backed up, gitignored) ---
 DATA_ROOT = REPO_ROOT / "data"
 VOICES_DIR = DATA_ROOT / "voices"
 AUDIO_OUT = DATA_ROOT / "out"
@@ -26,7 +27,7 @@ LISTEN_DIR = DATA_ROOT / "listen"    # curated clips to review (Listen tab)
 PREVIEW_DIR = DATA_ROOT / "preview"  # transient A/B/C design variants awaiting a save
 LORAS_DIR = VOICES_DIR / "loras"     # per-voice LoRA adapters for baked (cloned) voices
 
-# --- Regenerable bulk (model weights) -> OUTSIDE Dropbox ---
+# --- Regenerable bulk (model weights) -> OUTSIDE the synced repo tree ---
 # OPENVOICE_ROOT overrides the location (e.g. a deploy box points it at its own data
 # drive); otherwise default under LOCALAPPDATA (home as a last resort).
 _root_override = os.environ.get("OPENVOICE_ROOT")
@@ -48,6 +49,6 @@ FRONTEND_PORT = 5600
 # --- Built frontend (single-port deploy) ---
 # In DEV the UI runs on Vite (:5600) and proxies /api to this backend. In a DEPLOYED
 # build the frontend is compiled and served straight from this backend, so a box runs
-# on ONE port with no Node process. OPENVOICE_DIST overrides the location (the dev box
-# builds outside Dropbox to dodge the EPERM race); default is the repo's web/dist.
+# on ONE port with no Node process. OPENVOICE_DIST overrides the location (build outside
+# a cloud-synced folder to dodge its EPERM race); default is the repo's web/dist.
 DIST_DIR = Path(os.environ.get("OPENVOICE_DIST") or (REPO_ROOT / "web" / "dist"))

@@ -7,7 +7,8 @@ import os
 from pathlib import Path
 
 # Mirror server/app/config.py's cache rule: regenerable model bulk lives OUTSIDE the
-# Dropbox tree, under OPENVOICE_ROOT (falling back to %LOCALAPPDATA%\openvoice).
+# repo tree (which may be cloud-synced), under OPENVOICE_ROOT (falling back to
+# %LOCALAPPDATA%\openvoice).
 _root = os.environ.get("OPENVOICE_ROOT")
 if _root:
     HF_HOME = Path(_root) / "hf-cache"
